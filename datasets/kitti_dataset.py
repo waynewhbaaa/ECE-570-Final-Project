@@ -16,22 +16,39 @@ from .mono_dataset import MonoDataset
 
 
 class KITTIDataset(MonoDataset):
+<<<<<<< HEAD
     """Superclass for different types of KITTI dataset loaders
+=======
+    """
+    Superclass for different types of KITTI dataset loaders
+>>>>>>> aspp/master
     """
     def __init__(self, *args, **kwargs):
         super(KITTIDataset, self).__init__(*args, **kwargs)
 
+<<<<<<< HEAD
         # NOTE: Make sure your intrinsics matrix is *normalized* by the original image size.
         # To normalize you need to scale the first row by 1 / image_width and the second row
         # by 1 / image_height. Monodepth2 assumes a principal point to be exactly centered.
         # If your principal point is far from the center you might need to disable the horizontal
         # flip augmentation.
+=======
+        # NOTE: Make sure your intrinsics matrix is *normalized* by the original image size
+        # #确保你的内部矩阵是*标准化*原始图像大小   
+        # 内参矩阵 
+>>>>>>> aspp/master
         self.K = np.array([[0.58, 0, 0.5, 0],
                            [0, 1.92, 0.5, 0],
                            [0, 0, 1, 0],
                            [0, 0, 0, 1]], dtype=np.float32)
 
+<<<<<<< HEAD
         self.full_res_shape = (1242, 375)
+=======
+        #图像reshape大小
+        self.full_res_shape = (1242, 375)
+        #代表左图还是右图。
+>>>>>>> aspp/master
         self.side_map = {"2": 2, "3": 3, "l": 2, "r": 3}
 
     def check_depth(self):

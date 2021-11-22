@@ -13,6 +13,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+<<<<<<< HEAD
+=======
+
+#12.4，over
+
+
+
+#1
+#从视差图(pose_decoder的输出)转换为深度预测
+>>>>>>> aspp/master
 def disp_to_depth(disp, min_depth, max_depth):
     """Convert network's sigmoid output into depth prediction
     The formula for this conversion is given in the 'additional considerations'
@@ -24,11 +34,23 @@ def disp_to_depth(disp, min_depth, max_depth):
     depth = 1 / scaled_disp
     return scaled_disp, depth
 
+<<<<<<< HEAD
 
 def transformation_from_parameters(axisangle, translation, invert=False):
     """Convert the network's (axisangle, translation) output into a 4x4 matrix
     """
     R = rot_from_axisangle(axisangle)
+=======
+#2
+#将网络（轴角，平移）输出转换为4x4矩阵
+def transformation_from_parameters(axisangle, translation, invert=False):
+    """Convert the network's (axisangle, translation) output into a 4x4 matrix
+    """
+
+    #调用转换函数，将轴角axisangle转换为一个4x4的变换矩阵
+    R = rot_from_axisangle(axisangle)
+    #t就是简单的复制一下
+>>>>>>> aspp/master
     t = translation.clone()
 
     if invert:
@@ -44,7 +66,16 @@ def transformation_from_parameters(axisangle, translation, invert=False):
 
     return M
 
+<<<<<<< HEAD
 
+=======
+#2.1
+#将一个平移向量T转换为4x4的转换矩阵
+"""
+input：translation_vector
+return：T（4x4的转换矩阵）
+"""
+>>>>>>> aspp/master
 def get_translation_matrix(translation_vector):
     """Convert a translation vector into a 4x4 transformation matrix
     """
@@ -60,7 +91,16 @@ def get_translation_matrix(translation_vector):
 
     return T
 
+<<<<<<< HEAD
 
+=======
+#2.2
+#将轴角旋转转换为4x4的变换矩阵
+"""
+input:轴角axisangle（必须是Bx1x3）
+output：rot：一个4x4的变换矩阵
+"""
+>>>>>>> aspp/master
 def rot_from_axisangle(vec):
     """Convert an axisangle rotation into a 4x4 transformation matrix
     (adapted from https://github.com/Wallacoloo/printipi)
@@ -103,6 +143,11 @@ def rot_from_axisangle(vec):
     return rot
 
 
+<<<<<<< HEAD
+=======
+#3
+#一个卷积层加一个elu组成的block
+>>>>>>> aspp/master
 class ConvBlock(nn.Module):
     """Layer to perform a convolution followed by ELU
     """
@@ -118,6 +163,11 @@ class ConvBlock(nn.Module):
         return out
 
 
+<<<<<<< HEAD
+=======
+#4
+#填充层加卷积层
+>>>>>>> aspp/master
 class Conv3x3(nn.Module):
     """Layer to pad and convolve input
     """
@@ -136,8 +186,15 @@ class Conv3x3(nn.Module):
         return out
 
 
+<<<<<<< HEAD
 class BackprojectDepth(nn.Module):
     """Layer to transform a depth image into a point cloud
+=======
+#将深度图转换为3D点云
+class BackprojectDepth(nn.Module):
+    """
+    Layer to transform a depth image into a point cloud
+>>>>>>> aspp/master
     """
     def __init__(self, batch_size, height, width):
         super(BackprojectDepth, self).__init__()
@@ -146,6 +203,11 @@ class BackprojectDepth(nn.Module):
         self.height = height
         self.width = width
 
+<<<<<<< HEAD
+=======
+        #numpy.meshgrid()——生成网格点坐标矩阵
+        #这样生成了一个 长、宽已知的网格点矩阵，
+>>>>>>> aspp/master
         meshgrid = np.meshgrid(range(self.width), range(self.height), indexing='xy')
         self.id_coords = np.stack(meshgrid, axis=0).astype(np.float32)
         self.id_coords = nn.Parameter(torch.from_numpy(self.id_coords),
@@ -167,9 +229,16 @@ class BackprojectDepth(nn.Module):
 
         return cam_points
 
+<<<<<<< HEAD
 
 class Project3D(nn.Module):
     """Layer which projects 3D points into a camera with intrinsics K and at position T
+=======
+#使用内参K和T，将3D点投影到相机中的层
+class Project3D(nn.Module):
+    """
+    Layer which projects 3D points into a camera with intrinsics K and at position T
+>>>>>>> aspp/master
     """
     def __init__(self, batch_size, height, width, eps=1e-7):
         super(Project3D, self).__init__()
@@ -193,12 +262,21 @@ class Project3D(nn.Module):
         return pix_coords
 
 
+<<<<<<< HEAD
+=======
+#插值上采样
+>>>>>>> aspp/master
 def upsample(x):
     """Upsample input tensor by a factor of 2
     """
     return F.interpolate(x, scale_factor=2, mode="nearest")
 
 
+<<<<<<< HEAD
+=======
+# 计算视差图像的平滑度损失，
+# 彩色图像用于边缘感知平滑
+>>>>>>> aspp/master
 def get_smooth_loss(disp, img):
     """Computes the smoothness loss for a disparity image
     The color image is used for edge-aware smoothness
@@ -215,8 +293,16 @@ def get_smooth_loss(disp, img):
     return grad_disp_x.mean() + grad_disp_y.mean()
 
 
+<<<<<<< HEAD
 class SSIM(nn.Module):
     """Layer to compute the SSIM loss between a pair of images
+=======
+#计算SSIM
+#计算一对图像之间的SSIM损失
+class SSIM(nn.Module):
+    """
+    Layer to compute the SSIM loss between a pair of images
+>>>>>>> aspp/master
     """
     def __init__(self):
         super(SSIM, self).__init__()
@@ -248,6 +334,11 @@ class SSIM(nn.Module):
         return torch.clamp((1 - SSIM_n / SSIM_d) / 2, 0, 1)
 
 
+<<<<<<< HEAD
+=======
+# 预测深度与groundtruth深度误差度量的计算
+# 返回值：abs_rel, sq_rel, rmse, rmse_log, a1, a2, a3
+>>>>>>> aspp/master
 def compute_depth_errors(gt, pred):
     """Computation of error metrics between predicted and ground truth depths
     """

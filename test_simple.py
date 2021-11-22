@@ -21,7 +21,10 @@ from torchvision import transforms, datasets
 import networks
 from layers import disp_to_depth
 from utils import download_model_if_doesnt_exist
+<<<<<<< HEAD
 from evaluate_depth import STEREO_SCALE_FACTOR
+=======
+>>>>>>> aspp/master
 
 
 def parse_args():
@@ -30,6 +33,7 @@ def parse_args():
 
     parser.add_argument('--image_path', type=str,
                         help='path to a test image or folder of images', required=True)
+<<<<<<< HEAD
     parser.add_argument('--model_name', type=str,
                         help='name of a pretrained model to use',
                         choices=[
@@ -42,21 +46,35 @@ def parse_args():
                             "mono_1024x320",
                             "stereo_1024x320",
                             "mono+stereo_1024x320"])
+=======
+    parser.add_argument('--save_path', type=str,
+                        help='path to save the test image or folder of images', required=True)                    
+    parser.add_argument('--model_name', type=str,
+                        help='name of a pretrained model to use')
+>>>>>>> aspp/master
     parser.add_argument('--ext', type=str,
                         help='image extension to search for in folder', default="jpg")
     parser.add_argument("--no_cuda",
                         help='if set, disables CUDA',
                         action='store_true')
+<<<<<<< HEAD
     parser.add_argument("--pred_metric_depth",
                         help='if set, predicts metric depth instead of disparity. (This only '
                              'makes sense for stereo-trained KITTI models).',
                         action='store_true')
+=======
+>>>>>>> aspp/master
 
     return parser.parse_args()
 
 
 def test_simple(args):
+<<<<<<< HEAD
     """Function to predict for a single image or folder of images
+=======
+    """
+    Function to predict for a single image or folder of images
+>>>>>>> aspp/master
     """
     assert args.model_name is not None, \
         "You must specify the --model_name parameter; see README.md for an example"
@@ -66,19 +84,31 @@ def test_simple(args):
     else:
         device = torch.device("cpu")
 
+<<<<<<< HEAD
     if args.pred_metric_depth and "stereo" not in args.model_name:
         print("Warning: The --pred_metric_depth flag only makes sense for stereo-trained KITTI "
               "models. For mono-trained models, output depths will not in metric space.")
 
     download_model_if_doesnt_exist(args.model_name)
     model_path = os.path.join("models", args.model_name)
+=======
+    # download_model_if_doesnt_exist(args.model_name)
+    #model_path = os.path.join("models", args.model_name)
+    model_path = args.model_name
+>>>>>>> aspp/master
     print("-> Loading model from ", model_path)
     encoder_path = os.path.join(model_path, "encoder.pth")
     depth_decoder_path = os.path.join(model_path, "depth.pth")
 
     # LOADING PRETRAINED MODEL
     print("   Loading pretrained encoder")
+<<<<<<< HEAD
     encoder = networks.ResnetEncoder(18, False)
+=======
+    #encoder = networks.ResnetEncoder(18, False)
+    encoder = networks.ResnetEncoder(
+            nInputChannels = 3, pretrained = False)
+>>>>>>> aspp/master
     loaded_dict_enc = torch.load(encoder_path, map_location=device)
 
     # extract the height and width of image that this model was trained with
@@ -90,9 +120,15 @@ def test_simple(args):
     encoder.eval()
 
     print("   Loading pretrained decoder")
+<<<<<<< HEAD
     depth_decoder = networks.DepthDecoder(
         num_ch_enc=encoder.num_ch_enc, scales=range(4))
 
+=======
+    #depth_decoder = networks.DepthDecoder(num_ch_enc=encoder.num_ch_enc, scales=range(4))
+    depth_decoder = networks.DepthDecoder(
+            num_ch_enc=encoder.num_ch_enc, scales=range(4))
+>>>>>>> aspp/master
     loaded_dict = torch.load(depth_decoder_path, map_location=device)
     depth_decoder.load_state_dict(loaded_dict)
 
@@ -102,12 +138,21 @@ def test_simple(args):
     # FINDING INPUT IMAGES
     if os.path.isfile(args.image_path):
         # Only testing on a single image
+<<<<<<< HEAD
         paths = [args.image_path]
         output_directory = os.path.dirname(args.image_path)
     elif os.path.isdir(args.image_path):
         # Searching folder for images
         paths = glob.glob(os.path.join(args.image_path, '*.{}'.format(args.ext)))
         output_directory = args.image_path
+=======
+        paths = [args.image_path] 
+        output_directory = os.path.dirname(args.save_path)
+    elif os.path.isdir(args.image_path):
+        # Searching folder for images
+        paths = glob.glob(os.path.join(args.image_path, '*.{}'.format(args.ext)))
+        output_directory = args.save_path
+>>>>>>> aspp/master
     else:
         raise Exception("Can not find args.image_path: {}".format(args.image_path))
 
@@ -138,6 +183,7 @@ def test_simple(args):
 
             # Saving numpy file
             output_name = os.path.splitext(os.path.basename(image_path))[0]
+<<<<<<< HEAD
             scaled_disp, depth = disp_to_depth(disp, 0.1, 100)
             if args.pred_metric_depth:
                 name_dest_npy = os.path.join(output_directory, "{}_depth.npy".format(output_name))
@@ -146,6 +192,11 @@ def test_simple(args):
             else:
                 name_dest_npy = os.path.join(output_directory, "{}_disp.npy".format(output_name))
                 np.save(name_dest_npy, scaled_disp.cpu().numpy())
+=======
+            name_dest_npy = os.path.join(output_directory, "{}_disp.npy".format(output_name))
+            scaled_disp, _ = disp_to_depth(disp, 0.1, 100)
+            np.save(name_dest_npy, scaled_disp.cpu().numpy())
+>>>>>>> aspp/master
 
             # Saving colormapped depth image
             disp_resized_np = disp_resized.squeeze().cpu().numpy()
@@ -158,10 +209,15 @@ def test_simple(args):
             name_dest_im = os.path.join(output_directory, "{}_disp.jpeg".format(output_name))
             im.save(name_dest_im)
 
+<<<<<<< HEAD
             print("   Processed {:d} of {:d} images - saved predictions to:".format(
                 idx + 1, len(paths)))
             print("   - {}".format(name_dest_im))
             print("   - {}".format(name_dest_npy))
+=======
+            print("   Processed {:d} of {:d} images - saved prediction to {}".format(
+                idx + 1, len(paths), name_dest_im))
+>>>>>>> aspp/master
 
     print('-> Done!')
 

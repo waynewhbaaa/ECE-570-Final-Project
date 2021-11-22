@@ -9,10 +9,20 @@ from __future__ import absolute_import, division, print_function
 from trainer import Trainer
 from options import MonodepthOptions
 
+<<<<<<< HEAD
+=======
+#载入参数，
+>>>>>>> aspp/master
 options = MonodepthOptions()
 opts = options.parse()
 
 
+<<<<<<< HEAD
+=======
+#测试输入
+
+
+>>>>>>> aspp/master
 if __name__ == "__main__":
     trainer = Trainer(opts)
     trainer.train()

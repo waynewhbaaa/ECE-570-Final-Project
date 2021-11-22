@@ -10,6 +10,12 @@ import hashlib
 import zipfile
 from six.moves import urllib
 
+<<<<<<< HEAD
+=======
+#12.4， over
+
+
+>>>>>>> aspp/master
 
 def readlines(filename):
     """Read all the lines in a text file and return as a list
@@ -18,7 +24,11 @@ def readlines(filename):
         lines = f.read().splitlines()
     return lines
 
+<<<<<<< HEAD
 
+=======
+#正则化图片
+>>>>>>> aspp/master
 def normalize_image(x):
     """Rescale image pixels to span range [0, 1]
     """

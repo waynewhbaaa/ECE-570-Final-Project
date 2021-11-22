@@ -5,6 +5,15 @@ import numpy as np
 from collections import Counter
 
 
+<<<<<<< HEAD
+=======
+
+#12.4，over
+
+
+
+#加载激光点云数据
+>>>>>>> aspp/master
 def load_velodyne_points(filename):
     """Load 3D point cloud from KITTI file format
     (adapted from https://github.com/hunse/kitti)
@@ -14,6 +23,10 @@ def load_velodyne_points(filename):
     return points
 
 
+<<<<<<< HEAD
+=======
+#读取标定文件
+>>>>>>> aspp/master
 def read_calib_file(path):
     """Read KITTI calibration file
     (from https://github.com/hunse/kitti)
@@ -35,14 +48,22 @@ def read_calib_file(path):
 
     return data
 
+<<<<<<< HEAD
 
+=======
+#将行、列矩阵的下标转换为线性索引
+>>>>>>> aspp/master
 def sub2ind(matrixSize, rowSub, colSub):
     """Convert row, col matrix subscripts to linear indices
     """
     m, n = matrixSize
     return rowSub * (n-1) + colSub - 1
 
+<<<<<<< HEAD
 
+=======
+#用激光点云  生成一个深度图，进行loss计算
+>>>>>>> aspp/master
 def generate_depth_map(calib_dir, velo_filename, cam=2, vel_depth=False):
     """Generate a depth map from velodyne data
     """
